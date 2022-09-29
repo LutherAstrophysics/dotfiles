@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+DIR="$(pwd)/$(dirname $0)"
+NNN_PLUGINS_DIR="$HOME/.config/nnn/plugins/personal"
+
+# Create directory and intermediaries if doesn't exist
+mkdir -p $NNN_PLUGINS_DIR
+
+# Files to ignore, non-plugins
+NON_PLUGINS=("install" "." "..", "README.md")
+
+for file in $(ls -a $DIR);
+do
+    # If file isn't among non-plugins
+    if [[ ! "${NON_PLUGINS[*]}" =~ "${file}" ]]; then
+        ln -s "${DIR}/${file}" "${NNN_PLUGINS_DIR}/${file}"
+    fi
+done

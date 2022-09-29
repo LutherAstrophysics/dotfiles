@@ -1,0 +1,17 @@
+[init]
+	defaultBranch = main
+[user]
+	name = suman chapai
+	email = sumanchapai@gmail.com
+[alias]
+    st = status
+    diff = difftool
+    lol = log --oneline --graph --decorate
+    co = checkout
+    root=rev-parse --show-toplevel
+[diff]
+	tool = vimdiff
+[merge "ours"]
+	driver = true
+[color "decorate"]
+    HEAD = cyan

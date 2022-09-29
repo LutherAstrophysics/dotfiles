@@ -1,0 +1,30 @@
+# Environment variables
+export EDITOR=vim
+export VISUAL=vim
+
+# Shell variables (modify the current shell only)
+COLOR_GREEN="$(tput setaf 2)"
+COLOR_BLUE="$(tput setaf 4)"
+COLOR_RESET="$(tput sgr0)"
+
+# nnn commands
+# Display git lol on ;l (* at the end means don't wait for enter key to execute)
+NNN_PLUG='l:!git lol*'
+# Git status on ;s
+NNN_PLUG='s:!git st;'$NNN_PLUG
+# Clear screen on ;c
+NNN_PLUG='c:!clear*;'$NNN_PLUG
+
+# nnn plugins
+NNN_PLUG_PERSONAL='e:personal/vimopenall;D:personal/delete'
+NNN_PLUG="$NNN_PLUG;$NNN_PLUG_PERSONAL"
+
+# Make NNN_PLUG a env variable than just a shell variable for nnn to read it
+export NNN_PLUG=$NNN_PLUG
+
+# PROMPT_COMMAND if set acts as if run between any two commands
+# Setting this s.t. we'll have a newline after each command
+export PROMPT_COMMAND="echo"
+
+# Tell python to not write .pyc files (py cache fles)
+export PYTHONDONTWRITEBYTECODE=1

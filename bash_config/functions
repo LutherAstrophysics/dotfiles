@@ -1,0 +1,122 @@
+# Create a directory (intermediaties if needed) and cd into it
+mcd()
+{
+    mkdir -p -- "$1" && cd -P -- "$1"
+}
+
+# cd on quit nnn
+n ()
+{
+    # Block nesting of nnn in subshells
+    if [[ "${NNNLVL:-0}" -ge 1 ]]; then
+        echo "nnn is already running"
+        return
+    fi
+
+    # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
+    # If NNN_TMPFILE is set to a custom path, it must be exported for nnn to
+    # see. To cd on quit only on ^G, remove the "export" and make sure not to
+    # use a custom path, i.e. set NNN_TMPFILE *exactly* as follows:
+    #     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+    # stty start undef
+    # stty stop undef
+    # stty lwrap undef
+    # stty lnext undef
+
+    # The backslash allows one to alias n to nnn if desired without making an
+    # infinitely recursive alias
+    \nnn -e "$@"
+
+    if [ -f "$NNN_TMPFILE" ]; then
+            . "$NNN_TMPFILE"
+            rm -f "$NNN_TMPFILE" > /dev/null
+    fi
+}
+
+# VM start and stop
+vm () 
+{
+    cd ~/Virtual\ Machines.localized/Ubuntu\ 64-bit\ 20.04.3.vmwarevm/
+    if [[ $# -gt 0 ]]; then
+        if [[ $1 == "stop" ]]; then
+            echo "stoping vm"
+            # & at the end makes command non-blocking
+            vmrun -T fusion stop Ubuntu\ 64-bit\ 20.04.3.vmx soft &
+        elif [[ $1 == "start" ]]; then
+            echo "starting vm"
+            vmrun -T fusion start Ubuntu\ 64-bit\ 20.04.3.vmx nogui && ssh 10.28.163.206 || echo "some error"
+        else
+            echo "PASS EITHER stop OR start"
+        fi
+    else
+        echo "PASS EITHER stop OR start"
+    fi
+    cd -
+}
+
+# open CCL vm in headless mode and sshinto it
+ccl ()
+{
+    if [[ $# -gt 0 ]]; then
+        if [[ $1 == "stop" ]]; then
+            echo "stoping ccl vm"
+            # & at the end makes command non-blocking
+            VBoxManage controlvm CCL savestate & 
+        elif [[ $1 == "start" ]]; then
+            echo "starting vm"
+            VBoxManage startvm CCL --type headless || true ; ssh -p 2222 ccl@127.0.0.1
+        else
+            echo "PASS EITHER stop OR start"
+        fi
+    else
+        echo "pass arg either end or start"
+    fi
+}
+
+
+# Activating and deactivating python environement
+# also checks parents directories if .venv not found in current directory
+# limits traversing parent directory infinitely
+a ()
+{
+    depth_max=5
+    # 1 for true and 0 for false
+    success=0
+    currend_dir="$(pwd)"
+
+    while [ $success -eq 0 ] && [ $depth_max -gt 0 ]
+        do
+        source "${currend_dir}/.venv/bin/activate" > /dev/null 2>&1  && success=1
+        let "depth_max=depth_max - 1"
+        if [ $success -ne 1 ]; then
+            currend_dir="${currend_dir}/.."
+        fi
+        done
+
+    if [ $success -eq 1 ]; then
+        : # Successful
+    else
+        echo "No .venv found"
+    fi
+}
+
+# venv deactivate if virtual environment is activated 
+d ()
+{
+    if deactivate &> /dev/null ; then
+        : # Successful
+    else
+        echo "no venv to deactivate"
+    fi
+}
+
+# run git push on all remotes
+gpushall () 
+{
+    for remote in $(git remote); do
+        git push ${remote} "${@:1}"
+    done
+}

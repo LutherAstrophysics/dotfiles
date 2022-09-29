@@ -1,0 +1,37 @@
+alias ll="ls -l"
+alias c='clear'
+
+# Make intermediate dirs if required
+alias mkdir='mkdir -v'
+
+# Reload bash_profile (. is shorthand for source ?)
+alias s=". ~/.bash_profile"
+
+# Open current direcotry in finder
+alias o='open .'
+
+# Tmux 
+alias t='tmux attach'
+alias ta='tmux attach-session -t'
+alias tn='tmux new -s'
+alias tl='tmux ls'
+
+# Open in tabs if more than one file vim/nvim
+alias vi='vi -p'
+alias vim='vim -p'
+alias nvim='nvim -p'
+
+# Django related
+alias pmr='python manage.py runserver'
+alias pms='python manage.py shell'
+alias pmc='python manage.py check'
+alias pmt='python manage.py test'
+
+# nnn
+alias nnn='n -e'
+
+# Go to oss software directory
+alias oss='cd ~/Desktop/oss'
+
+# # Python3 instead of python2
+# alias python='python3'
