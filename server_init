@@ -1,0 +1,5 @@
+#!/bin/sh
+
+~/Desktop/light-curves/backend/scripts/startDatabase.sh  &
+cd ~/Desktop/light-curves/client/
+yarn build && yarn start  
