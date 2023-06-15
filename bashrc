@@ -14,7 +14,8 @@ function update-m23-db {
 function restart-frontend {
     kill -9 `ss -tlpn | grep 2300 | sed -E 's/^.*pid=//' | sed -E 's/,.*//'` || true
     cd ~/Desktop/light-curves/client/
-    yarn build && yarn start &
+    yarn build
+    yarn start
 }
 
 
